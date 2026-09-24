@@ -1,0 +1,125 @@
+{
+  "entities": {
+    "Transaction": {
+      "title": "Transaction",
+      "description": "Inventory in/out transaction record",
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "Slip tracking code like NK-260923-001 or XK-260923-001"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["IN", "OUT"],
+          "description": "IN for Inbound (Nhap kho), OUT for Outbound (Xuat kho)"
+        },
+        "date": {
+          "type": "string",
+          "description": "Transaction date YYYY-MM-DD"
+        },
+        "monthKey": {
+          "type": "string",
+          "description": "Period month key format YYYY-MM"
+        },
+        "branchId": {
+          "type": "string",
+          "description": "Target warehouse branch ID"
+        },
+        "itemId": {
+          "type": "string",
+          "description": "Product SKU/Item ID"
+        },
+        "quantity": {
+          "type": "number",
+          "description": "Quantity transacted"
+        },
+        "partner": {
+          "type": "string",
+          "description": "Supplier/Receiver or transporter"
+        },
+        "note": {
+          "type": "string",
+          "description": "Additional notes"
+        },
+        "createdBy": {
+          "type": "string",
+          "description": "Creator user email or uid"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "ISO timestamp"
+        }
+      },
+      "required": ["code", "type", "date", "monthKey", "branchId", "itemId", "quantity"]
+    },
+    "Item": {
+      "title": "Item",
+      "description": "Catalog SKU product master",
+      "type": "object",
+      "properties": {
+        "sku": { "type": "string" },
+        "name": { "type": "string" },
+        "category": { "type": "string" },
+        "unit": { "type": "string" },
+        "minStock": { "type": "number" }
+      },
+      "required": ["sku", "name", "category", "unit"]
+    },
+    "Branch": {
+      "title": "Branch",
+      "description": "Warehouse branch location",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "code": { "type": "string" },
+        "region": { "type": "string" }
+      },
+      "required": ["name", "code", "region"]
+    },
+    "MonthlyBalance": {
+      "title": "MonthlyBalance",
+      "description": "Initial stock balance for a given month, branch and item",
+      "type": "object",
+      "properties": {
+        "monthKey": { "type": "string" },
+        "branchId": { "type": "string" },
+        "itemId": { "type": "string" },
+        "initialStock": { "type": "number" }
+      },
+      "required": ["monthKey", "branchId", "itemId", "initialStock"]
+    },
+    "SystemConfig": {
+      "title": "SystemConfig",
+      "description": "Global application configuration and admin access list",
+      "type": "object",
+      "properties": {
+        "adminEmails": { "type": "array" },
+        "webhookUrl": { "type": "string" },
+        "autoSyncWebhook": { "type": "boolean" }
+      }
+    }
+  },
+  "firestore": {
+    "/transactions/{transactionId}": {
+      "schema": "Transaction",
+      "description": "Collection of all inventory inbound and outbound transactions"
+    },
+    "/items/{itemId}": {
+      "schema": "Item",
+      "description": "Collection of all product SKUs"
+    },
+    "/branches/{branchId}": {
+      "schema": "Branch",
+      "description": "Collection of warehouse branches"
+    },
+    "/monthlyBalances/{balanceId}": {
+      "schema": "MonthlyBalance",
+      "description": "Collection of starting inventory per month, branch and item"
+    },
+    "/config/{configId}": {
+      "schema": "SystemConfig",
+      "description": "System configuration document"
+    }
+  }
+}
